@@ -8,8 +8,11 @@ from kubernetes import client, config
 def main():
     number_days = int(os.getenv('NUMBER_DAYS', 7))
     namespace = os.getenv('NAMESPACE', 'default')
-
-    config.load_kube_config()
+    is_cluster = bool(os.getenv('IS_CLUSTER', True))
+    if is_cluster:
+        config.load_incluster_config()
+    else:
+        config.load_kube_config()
     client_job = client.BatchV1Api()
     label_selector = 'app=migration'
     instances = client_job.list_namespaced_job(namespace=namespace, label_selector=label_selector)
