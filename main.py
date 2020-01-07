@@ -9,12 +9,12 @@ def main():
     number_days = int(os.getenv('NUMBER_DAYS', 7))
     namespace = os.getenv('NAMESPACE', 'default')
     is_cluster = bool(os.getenv('IS_CLUSTER', True))
+    label_selector = os.getenv('LABEL_SELECTOR', 'app=migration')
     if is_cluster:
         config.load_incluster_config()
     else:
         config.load_kube_config()
     client_job = client.BatchV1Api()
-    label_selector = 'app=migration'
     instances = client_job.list_namespaced_job(namespace=namespace, label_selector=label_selector)
     now = datetime.datetime.utcnow().replace(tzinfo=tzutc())
     for job in instances.items:
