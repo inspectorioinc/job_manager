@@ -11,6 +11,8 @@ def main():
     namespace = os.getenv('NAMESPACE', 'default')
     is_cluster = bool(os.getenv('IS_CLUSTER', True))
     label_selector = os.getenv('LABEL_SELECTOR', 'app=migration')
+    propagation_policy = os.getenv('PROPAGATION_POLICY', 'Background')
+
     if is_cluster:
         config.load_incluster_config()
     else:
@@ -33,7 +35,7 @@ def main():
             if not is_lower_one_week(now=now,
                                      time=check_time,
                                      number_days=number_days):
-                delete_job(job_name=job_name, namespace=namespace)
+                delete_job(job_name=job_name, namespace=namespace, propagation_policy=propagation_policy)
                 is_skip_all = False
                 continue
         else:
@@ -48,7 +50,7 @@ def main():
 
 def delete_job(job_name, namespace):
     try:
-        client.BatchV1Api().delete_namespaced_job(name=job_name, namespace=namespace)
+        client.BatchV1Api().delete_namespaced_job(name=job_name, namespace=namespace, propagation_policy=propagation_policy)
     except Exception as e:
         print(f'Delete job name {job_name} is failed due to {str(e)}')
     else:
