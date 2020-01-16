@@ -41,7 +41,7 @@ def main():
         else:
             label_selector_for_pod = f'job-name={job_name}'
             if not is_pod_running(namespace=namespace, label_selector=label_selector_for_pod):
-                delete_job(job_name=job_name, namespace=namespace)
+                delete_job(job_name=job_name, namespace=namespace, propagation_policy=propagation_policy)
                 is_skip_all = False
                 continue
     if is_skip_all:
