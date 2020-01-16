@@ -48,9 +48,10 @@ def main():
         print(f'Unable for finding jobs being larger than {number_days} days')
 
 
-def delete_job(job_name, namespace):
+def delete_job(job_name, namespace, propagation_policy):
     try:
-        client.BatchV1Api().delete_namespaced_job(name=job_name, namespace=namespace, propagation_policy=propagation_policy)
+        client.BatchV1Api().delete_namespaced_job(name=job_name, namespace=namespace,
+                                                  propagation_policy=propagation_policy)
     except Exception as e:
         print(f'Delete job name {job_name} is failed due to {str(e)}')
     else:
